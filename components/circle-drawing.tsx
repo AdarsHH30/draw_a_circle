@@ -368,7 +368,7 @@ export default function CircleDrawing({
     const lastPoint = points[points.length - 1];
     const distance = Math.sqrt(
       Math.pow(lastPoint.x - firstPoint.x, 2) +
-        Math.pow(lastPoint.y - firstPoint.y, 2)
+      Math.pow(lastPoint.y - firstPoint.y, 2)
     );
 
     const isClosed = distance < targetRadius * 0.2;
