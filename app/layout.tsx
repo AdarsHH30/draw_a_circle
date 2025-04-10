@@ -1,28 +1,20 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
-
-const inter = Inter({ subsets: ["latin"] })
+import type React from "react";
+import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Circle Master - Drawing Challenge",
-  description: "Test your circle drawing skills with this interactive challenge",
-    generator: 'v0.dev'
-}
+  title: "Circle Quest - Retro Drawing Challenge",
+  description: "Test your circle drawing skills in this retro pixel-art game",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={inter.className}>{children}</body>
+      <body className="font-pixel">{children}</body>
     </html>
-  )
+  );
 }
-
-
-
-import './globals.css'

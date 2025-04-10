@@ -1,0 +1,92 @@
+/* ...existing code... */
+
+/* Pixel Theme */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+  font-family: 'Press Start 2P', cursive;
+  background-color: #222;
+  color: #fff;
+  image-rendering: pixelated;
+}
+
+button {
+  font-family: 'Press Start 2P', cursive;
+  background-color: #444;
+  color: #fff;
+  border: 4px solid #fff;
+  padding: 8px 16px;
+  margin: 8px;
+  image-rendering: pixelated;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #000;
+  transition: all 0.2s;
+}
+
+button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #000;
+}
+
+button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #000;
+}
+
+.container {
+  border: 4px solid #fff;
+  padding: 16px;
+  background-color: #333;
+}
+
+canvas {
+  border: 4px solid #fff;
+  background-color: #000;
+  image-rendering: pixelated;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Enhanced Success Popup */
+.success-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #111;
+  border: 6px solid #4caf50;
+  padding: 24px;
+  z-index: 100;
+  text-align: center;
+  box-shadow: 0 0 0 4px #000, 10px 10px 0 #000;
+  animation: popup-appear 0.3s ease-out forwards;
+}
+
+.success-popup h2 {
+  color: #4caf50;
+  margin-top: 0;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.success-popup p {
+  margin: 16px 0;
+  line-height: 1.5;
+}
+
+.success-popup button {
+  background-color: #4caf50;
+  border-color: #2e7d32;
+  margin-top: 16px;
+}
+
+.success-popup-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+@keyframes popup-appear {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+  80% { transform: translate(-50%, -50%) scale(1.05); opacity: 1y; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* ...existing code... */

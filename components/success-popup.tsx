@@ -1,71 +1,84 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { CheckCircle, Award, X } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { useEffect, useState } from "react";
+import { Trophy, X, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface SuccessPopupProps {
-  accuracy: number
-  onClose: () => void
+  accuracy: number;
+  onClose: () => void;
 }
 
 export default function SuccessPopup({ accuracy, onClose }: SuccessPopupProps) {
-  const [visible, setVisible] = useState(false)
-  const [confetti, setConfetti] = useState<{ x: number; y: number; size: number; color: string }[]>([])
+  const [visible, setVisible] = useState(false);
+  const [pixels, setPixels] = useState<
+    { x: number; y: number; color: string }[]
+  >([]);
+  const [isClosing, setIsClosing] = useState(false);
+  const [showNextLink, setShowNextLink] = useState(false);
 
   useEffect(() => {
     // Animate in
-    setTimeout(() => setVisible(true), 100)
+    const timer = setTimeout(() => setVisible(true), 100);
 
-    // Generate confetti particles
-    const particles = []
-    const colors = ["#10b981", "#34d399", "#6ee7b7", "#a7f3d0", "#d1fae5"]
+    // Generate pixel particles
+    const particles = [];
+    const colors = ["#10b981", "#34d399", "#6ee7b7", "#a7f3d0", "#d1fae5"];
 
     for (let i = 0; i < 50; i++) {
       particles.push({
         x: Math.random() * 100,
         y: Math.random() * 100,
-        size: Math.random() * 8 + 2,
         color: colors[Math.floor(Math.random() * colors.length)],
-      })
+      });
     }
 
-    setConfetti(particles)
+    setPixels(particles);
+
+    // Show next link with delay for dramatic effect
+    const nextLinkTimer = setTimeout(() => {
+      setShowNextLink(true);
+    }, 1500);
 
     // Cleanup
     return () => {
-      setVisible(false)
-      setConfetti([])
-    }
-  }, [])
+      clearTimeout(timer);
+      clearTimeout(nextLinkTimer);
+      setVisible(false);
+      setPixels([]);
+    };
+  }, []);
 
   const handleClose = () => {
-    setVisible(false)
-    setTimeout(onClose, 300) // Wait for animation to complete
-  }
+    if (isClosing) return;
+    setIsClosing(true);
+    setVisible(false);
+    setTimeout(() => {
+      onClose();
+    }, 300); // Wait for animation to complete
+  };
 
   return (
     <div
       className={cn(
-        "fixed inset-0 flex items-center justify-center bg-black/70 z-50 transition-opacity duration-300",
-        visible ? "opacity-100" : "opacity-0",
+        "fixed inset-0 flex items-center justify-center bg-black/70 z-50 transition-opacity duration-300 scanline-effect",
+        visible ? "opacity-100" : "opacity-0"
       )}
       onClick={handleClose}
     >
-      {/* Confetti */}
+      {/* Pixel particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {confetti.map((particle, i) => (
+        {pixels.map((pixel, i) => (
           <div
             key={i}
-            className="absolute animate-fall"
+            className="absolute animate-pixel-fall"
             style={{
-              left: `${particle.x}%`,
-              top: `${particle.y - 100}%`,
-              width: `${particle.size}px`,
-              height: `${particle.size}px`,
-              backgroundColor: particle.color,
-              borderRadius: "50%",
+              left: `${pixel.x}%`,
+              top: `${pixel.y - 100}%`,
+              width: `8px`,
+              height: `8px`,
+              backgroundColor: pixel.color,
               animationDelay: `${Math.random() * 2}s`,
               animationDuration: `${Math.random() * 3 + 2}s`,
             }}
@@ -76,8 +89,9 @@ export default function SuccessPopup({ accuracy, onClose }: SuccessPopupProps) {
       {/* Popup content */}
       <div
         className={cn(
-          "bg-gray-900 border border-gray-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl transition-all duration-300",
-          visible ? "transform-none" : "translate-y-8 scale-95",
+          "bg-gray-900 pixel-border-success p-6 max-w-md w-full mx-4 shadow-[0_0_0_4px_#065f46,0_0_0_8px_#064e3b]",
+          "transition-all duration-300 pixel-container crt-effect",
+          visible ? "transform-none" : "translate-y-8 scale-95"
         )}
         onClick={(e) => e.stopPropagation()}
       >
@@ -89,37 +103,64 @@ export default function SuccessPopup({ accuracy, onClose }: SuccessPopupProps) {
         </button>
 
         <div className="flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-full bg-emerald-900/30 flex items-center justify-center mb-6">
-            <CheckCircle className="w-12 h-12 text-emerald-400" />
+          <div className="w-20 h-20 pixel-border-success bg-emerald-900/30 flex items-center justify-center mb-6 rotate-animation">
+            <Trophy className="w-12 h-12 text-emerald-400" />
           </div>
 
-          <h2 className="text-2xl font-bold text-white mb-2">Perfect Circle!</h2>
-          <p className="text-gray-400 mb-6">You've drawn a circle with impressive precision.</p>
+          <h2 className="text-2xl font-pixel text-white mb-2 pixel-shadow glitch-text">
+            VICTORY!
+          </h2>
+          <p className="text-gray-400 mb-6 font-pixel text-sm">
+            PERFECT CIRCLE ACHIEVED
+          </p>
 
-          <div className="bg-gray-800 rounded-lg p-4 w-full mb-6">
+          <div className="bg-gray-800 pixel-border p-4 w-full mb-6">
             <div className="flex justify-between mb-2">
-              <span className="text-gray-400">Accuracy</span>
-              <span className="text-emerald-400 font-bold">{accuracy.toFixed(1)}%</span>
+              <span className="text-gray-400 font-pixel text-xs">ACCURACY</span>
+              <span className="text-emerald-400 font-pixel text-xs">
+                {accuracy.toFixed(1)}%
+              </span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-2.5">
+            <div className="w-full bg-gray-700 h-4 pixel-border-thin">
               <div
-                className="bg-gradient-to-r from-emerald-500 to-emerald-300 h-2.5 rounded-full"
-                style={{ width: `${accuracy}%` }}
+                className="bg-emerald-500 h-4 progress-animation"
+                style={{
+                  width: `${accuracy}%`,
+                  animationDuration: "1s",
+                }}
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-2 mb-6">
-            <Award className="text-amber-400 w-5 h-5" />
-            <span className="text-amber-400 font-medium">Achievement Unlocked: Circle Master</span>
+          <div className="flex items-center gap-2 mb-6 pixel-border-thin p-2 bg-yellow-900/30">
+            <span className="text-yellow-400 font-pixel text-xs blink-slow">
+              ACHIEVEMENT UNLOCKED: CIRCLE MASTER
+            </span>
           </div>
 
-          <Button onClick={handleClose} className="bg-emerald-600 hover:bg-emerald-500 text-white border-0">
-            Try Again
-          </Button>
+          {/* Next Round Link */}
+          {showNextLink ? (
+            <Link
+              href="/next-round"
+              className={cn(
+                "bg-purple-600 hover:bg-purple-500 text-white font-pixel pixel-button",
+                "py-3 px-6 flex items-center justify-center gap-2 w-full transition-all",
+                "scale-in-animation"
+              )}
+            >
+              NEXT ROUND <ArrowRight className="h-4 w-4 ml-1" />
+            </Link>
+          ) : (
+            <div className="h-12 w-full flex items-center justify-center">
+              <div className="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
-  )
+  );
 }
-
