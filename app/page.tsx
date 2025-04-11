@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import CircleDrawing from "@/components/circle-drawing";
 import SuccessPopup from "@/components/success-popup";
 import FailurePopup from "@/components/failure-popup";
-import { Zap } from "lucide-react";
+import { Activity, Info } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
   const [gameState, setGameState] = useState<
@@ -66,83 +68,131 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gray-950 text-gray-100 pixel-pattern scanline-effect">
-      <div className="max-w-3xl w-full space-y-8 pixel-container">
-        <div className="text-center pixel-text">
-          <h1 className="text-3xl font-pixel text-white mb-2 pixel-shadow glitch-text">
-            CIRCLE QUEST
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gray-950 text-gray-100 relative overflow-hidden">
+      <div className="max-w-3xl w-full space-y-8 flex-1">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center"
+        >
+          <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
+            Circle Quest
           </h1>
-          <div className="pixel-border p-2 mb-6 bg-gray-900/50">
-            <p className="text-md text-gray-400 font-pixel blink-slow">
-              Draw a 90% circle to get the next round link
-            </p>
-          </div>
-        </div>
+          <p className="text-gray-300 mb-8">
+            Draw a circle with at least 85% accuracy to continue
+          </p>
+        </motion.div>
 
         {/* Game status indicator */}
-        <div className="flex justify-center mb-4">
-          <div className="pixel-border bg-gray-900/70 p-2 flex items-center">
-            <div
-              className={`w-3 h-3 mr-2 ${
-                gameState === "idle"
-                  ? "bg-yellow-500 blink-fast"
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="flex justify-center mb-6"
+        >
+          <Card className="bg-gray-800/50 border-gray-700">
+            <CardContent className="p-3 flex items-center space-x-3">
+              <div
+                className={`status-indicator ${
+                  gameState === "idle"
+                    ? "bg-amber-500"
+                    : gameState === "drawing"
+                    ? "bg-blue-500"
+                    : gameState === "success"
+                    ? "bg-emerald-500"
+                    : "bg-red-500"
+                }`}
+              ></div>
+              <span className="text-sm font-medium">
+                {gameState === "idle"
+                  ? "Ready to Draw"
                   : gameState === "drawing"
-                  ? "bg-blue-500"
+                  ? "Drawing in Progress"
                   : gameState === "success"
-                  ? "bg-green-500"
-                  : "bg-red-500"
-              }`}
-            ></div>
-            <span className="font-pixel text-xs uppercase">
-              {gameState === "idle"
-                ? "READY"
-                : gameState === "drawing"
-                ? "DRAWING"
-                : gameState === "success"
-                ? "SUCCESS"
-                : "FAILED"}
-            </span>
-          </div>
-        </div>
+                  ? "Success"
+                  : "Failed"}
+              </span>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        <CircleDrawing
-          key={gameKey}
-          onCircleDrawn={handleCircleDrawn}
-          onSpeedFailure={handleSpeedFailure}
-          onMidDrawingFailure={handleMidDrawingFailure}
-          onDrawingStart={() => setGameState("drawing")}
-          accuracyThreshold={85} // Updated to 90%
-        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="canvas-container"
+        >
+          <CircleDrawing
+            key={gameKey}
+            onCircleDrawn={handleCircleDrawn}
+            onSpeedFailure={handleSpeedFailure}
+            onMidDrawingFailure={handleMidDrawingFailure}
+            onDrawingStart={() => setGameState("drawing")}
+            accuracyThreshold={85}
+          />
+        </motion.div>
 
-        {accuracy !== null &&
-          gameState !== "success" &&
-          gameState !== "failure" && (
-            <div className="mt-4 text-center">
-              <p className="text-gray-400 font-pixel">
-                ACCURACY:{" "}
-                <span
-                  className={
-                    accuracy >= 90 ? "text-green-400" : "text-yellow-400"
-                  }
-                >
-                  {accuracy.toFixed(1)}%
+        <AnimatePresence>
+          {accuracy !== null &&
+            gameState !== "success" &&
+            gameState !== "failure" && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="mt-6 text-center"
+              >
+                <Card className="bg-gray-800/50 border-gray-700 inline-block">
+                  <CardContent className="p-3 flex items-center space-x-2">
+                    <Activity className="h-4 w-4 text-gray-400" />
+                    <span className="text-gray-300">Accuracy: </span>
+                    <span
+                      className={
+                        accuracy >= 85
+                          ? "text-emerald-400 font-medium"
+                          : "text-amber-400 font-medium"
+                      }
+                    >
+                      {accuracy.toFixed(1)}%
+                    </span>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+        </AnimatePresence>
+
+        {gameState === "idle" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-6 text-center"
+          >
+            <Card className="bg-gray-800/50 border-gray-700 inline-block">
+              <CardContent className="p-3 flex items-center space-x-2">
+                <Info className="h-4 w-4 text-blue-400" />
+                <span className="text-gray-300">
+                  Start drawing to begin the challenge
                 </span>
-              </p>
-            </div>
-          )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
       </div>
+      <AnimatePresence>
+        {gameState === "success" && (
+          <SuccessPopup accuracy={accuracy || 0} onClose={handleReset} />
+        )}
 
-      {gameState === "success" && (
-        <SuccessPopup accuracy={accuracy || 0} onClose={handleReset} />
-      )}
-
-      {gameState === "failure" && (
-        <FailurePopup
-          reason={failureReason}
-          accuracy={accuracy || 0}
-          onClose={handleReset}
-        />
-      )}
+        {gameState === "failure" && (
+          <FailurePopup
+            reason={failureReason}
+            accuracy={accuracy || 0}
+            onClose={handleReset}
+          />
+        )}
+      </AnimatePresence>
     </main>
   );
 }
