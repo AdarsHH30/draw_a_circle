@@ -134,7 +134,9 @@ export default function SuccessPopup({ accuracy, onClose }: SuccessPopupProps) {
 
           <div className="flex items-center gap-2 mb-6 pixel-border-thin p-2 bg-yellow-900/30">
             <span className="text-yellow-400 font-pixel text-xs blink-slow">
-              ACHIEVEMENT UNLOCKED: CIRCLE MASTER
+              <a href="https://digital-hunt-is.deeeep.fun/theciphergame">
+                Next Quest
+              </a>
             </span>
           </div>
 
