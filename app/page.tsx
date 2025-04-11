@@ -9,7 +9,8 @@ import { Zap } from "lucide-react";
 export default function Home() {
   const [gameState, setGameState] = useState<
     "idle" | "drawing" | "success" | "failure"
-  >("idle"); const [accuracy, setAccuracy] = useState<number | null>(null);
+  >("idle");
+  const [accuracy, setAccuracy] = useState<number | null>(null);
   const [failureReason, setFailureReason] = useState<string>("");
   const [gameKey, setGameKey] = useState<number>(0); // Used to force component remount
 
@@ -82,23 +83,24 @@ export default function Home() {
         <div className="flex justify-center mb-4">
           <div className="pixel-border bg-gray-900/70 p-2 flex items-center">
             <div
-              className={`w-3 h-3 mr-2 ${gameState === "idle"
-                ? "bg-yellow-500 blink-fast"
-                : gameState === "drawing"
+              className={`w-3 h-3 mr-2 ${
+                gameState === "idle"
+                  ? "bg-yellow-500 blink-fast"
+                  : gameState === "drawing"
                   ? "bg-blue-500"
                   : gameState === "success"
-                    ? "bg-green-500"
-                    : "bg-red-500"
-                }`}
+                  ? "bg-green-500"
+                  : "bg-red-500"
+              }`}
             ></div>
             <span className="font-pixel text-xs uppercase">
               {gameState === "idle"
                 ? "READY"
                 : gameState === "drawing"
-                  ? "DRAWING"
-                  : gameState === "success"
-                    ? "SUCCESS"
-                    : "FAILED"}
+                ? "DRAWING"
+                : gameState === "success"
+                ? "SUCCESS"
+                : "FAILED"}
             </span>
           </div>
         </div>
@@ -128,7 +130,6 @@ export default function Home() {
               </p>
             </div>
           )}
-
       </div>
 
       {gameState === "success" && (
