@@ -132,18 +132,10 @@ export default function SuccessPopup({ accuracy, onClose }: SuccessPopupProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 mb-6 pixel-border-thin p-2 bg-yellow-900/30">
-            <span className="text-yellow-400 font-pixel text-xs blink-slow">
-              <a href="https://digital-hunt-is.deeeep.fun/theciphergame">
-                Next Quest
-              </a>
-            </span>
-          </div>
-
           {/* Next Round Link */}
           {showNextLink ? (
             <Link
-              href="/next-round"
+              href="https://digital-hunt-is.deeeep.fun/theciphergame"
               className={cn(
                 "bg-purple-600 hover:bg-purple-500 text-white font-pixel pixel-button",
                 "py-3 px-6 flex items-center justify-center gap-2 w-full transition-all",
