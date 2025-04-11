@@ -94,7 +94,7 @@ export default function SuccessPopup({ accuracy, onClose }: SuccessPopupProps) {
           {/* Next Round Link */}
           {showNextLink ? (
             <Link
-              href="https://digital-hunt-is.deeeep.fun/debugthecode"
+              href="https://github.com/AdarsHH30/find-me.git"
               className={cn(
                 "bg-green-600 hover:bg-green-500 text-white font-medium rounded-lg",
                 "py-3 px-6 flex items-center justify-center gap-2 w-full transition-all",

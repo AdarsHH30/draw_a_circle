@@ -80,7 +80,7 @@ export default function Home() {
             Circle Quest
           </h1>
           <p className="text-gray-300 mb-8">
-            Draw a circle with at least 85% accuracy to continue
+            Draw a circle with at least 90% accuracy to continue
           </p>
         </motion.div>
 
@@ -129,7 +129,7 @@ export default function Home() {
             onSpeedFailure={handleSpeedFailure}
             onMidDrawingFailure={handleMidDrawingFailure}
             onDrawingStart={() => setGameState("drawing")}
-            accuracyThreshold={85}
+            accuracyThreshold={90}
           />
         </motion.div>
 
@@ -149,7 +149,7 @@ export default function Home() {
                     <span className="text-gray-300">Accuracy: </span>
                     <span
                       className={
-                        accuracy >= 85
+                        accuracy >= 90
                           ? "text-emerald-400 font-medium"
                           : "text-amber-400 font-medium"
                       }
