@@ -174,7 +174,6 @@ export default function CircleDrawing({
   const startDrawing = (
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
   ) => {
-    // Reset state for new drawing
     setIsDrawing(true);
     setPoints([]);
     midDrawingCheckRef.current = false;
