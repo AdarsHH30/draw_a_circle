@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   darkMode: ["class"],
@@ -11,7 +11,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        pixel: ['"Press Start 2P"', "cursive"],
+        pixel: ["var(--font-press-start)"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -56,6 +56,6 @@ const config: Config = {
     },
   },
   plugins: [],
-}
+};
 
-export default config
+export default config;

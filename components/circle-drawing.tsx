@@ -14,6 +14,7 @@ interface CircleDrawingProps {
   onSpeedFailure: () => void;
   onMidDrawingFailure: () => void;
   onDrawingStart: () => void;
+  onAccuracyChange: (accuracy: number) => void;
   accuracyThreshold: number; // Added prop for accuracy threshold
 }
 
@@ -22,6 +23,7 @@ export default function CircleDrawing({
   onSpeedFailure,
   onMidDrawingFailure,
   onDrawingStart,
+  onAccuracyChange,
   accuracyThreshold = 90, // Default to 90% as requested
 }: CircleDrawingProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -214,11 +216,11 @@ export default function CircleDrawing({
     const rect = canvas.getBoundingClientRect();
     const point = getPointFromEvent(e, rect);
 
+    // Update last point time
+    lastPointTimeRef.current = Date.now();
+
     setPoints((prevPoints) => {
       const newPoints = [...prevPoints, point];
-
-      // Update last point time
-      lastPointTimeRef.current = Date.now();
 
       // Check mid-drawing accuracy if we've drawn enough points
       if (!midDrawingCheckRef.current && newPoints.length > 20) {
@@ -257,6 +259,36 @@ export default function CircleDrawing({
 
       return newPoints;
     });
+
+    // Calculate real-time accuracy if we have enough points
+    if (points.length > 10) {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const targetRadius = Math.min(canvas.width, canvas.height) * 0.35;
+
+      // Find center of mass for the drawn points
+      let sumX = 0,
+        sumY = 0;
+      const currentPoints = [...points, point];
+      for (const p of currentPoints) {
+        sumX += p.x;
+        sumY += p.y;
+      }
+      const drawnCenterX = sumX / currentPoints.length;
+      const drawnCenterY = sumY / currentPoints.length;
+
+      const accuracy = calculateAccuracy(
+        currentPoints,
+        drawnCenterX,
+        drawnCenterY,
+        targetRadius
+      );
+
+      // Use requestAnimationFrame to schedule the accuracy update
+      requestAnimationFrame(() => {
+        onAccuracyChange(accuracy);
+      });
+    }
   };
 
   const stopDrawing = (isTimeout = false) => {
@@ -368,7 +400,7 @@ export default function CircleDrawing({
     const lastPoint = points[points.length - 1];
     const distance = Math.sqrt(
       Math.pow(lastPoint.x - firstPoint.x, 2) +
-      Math.pow(lastPoint.y - firstPoint.y, 2)
+        Math.pow(lastPoint.y - firstPoint.y, 2)
     );
 
     const isClosed = distance < targetRadius * 0.2;
